@@ -1,0 +1,17 @@
+Sampler File: vSampler_Coord-Only.txt
+Database File: EUR.gz
+
+Exclude input SNPs: true
+Sampling across chromosomes: false
+Variant type specific: true
+Sample control number: 1
+Annotation number: 1
+MAF deviation: [-0.05, 0.05]
+
+Match coding/noncoding region: false
+Number of insufficient match: 0
+
+Proportion of insufficient match:  0.0000
+Median size of insufficient pool: 0.0
+Median proportion of of insufficient pool:  0.000
+Number of variants excluded: 4742
