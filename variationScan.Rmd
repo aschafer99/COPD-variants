@@ -39,12 +39,12 @@ UCSC_genes$chrom <- str_replace(UCSC_genes$chrom, "chr", "")
 ```         
 
 <div style = "text-align: justify">
-Chronic Obstructive Pulmonary Disease (COPD) is a lung condition characterized by breathing difficulties. Previously it was studied the gene expression profiles of these diseases and published in PulmonDB database. But it was unknown what variants cause the disease, which is the main objective of my project and to determine which variants change the expression of the previously analyzed genes.        
+Chronic Obstructive Pulmonary Disease (COPD) is a lung condition characterized by breathing difficulties. Previously it was studied the gene expression profiles of this disease and published in PulmonDB database. But it was unknown which variants cause the disease, which is the main objective, where I found the variants that change the expression of the previously analyzed genes.        
 
-To do that, I focused on retrieving the variants, analyzed them with two negative controls if they had a significant change by motifs. Then I searched for genes that were close to the variants and saw if some of them were in a meta-analysis (realized by Ana Beatriz Villaseñor) which complement the data from PulmonDB.        
+To do that, I focused on retrieving the variants previously annotated for COPD genes and the disease, then analyzing them with Regulatory Sequence Analysis Tools (RSAT) to retrieve transcriptional factor motifs where the variants are affecting. Then I searched for genes close to the variants and filtered for those in a meta-analysis (realized by Ana Beatriz Villaseñor), which complemented the data from PulmonDB.      
 </div>      
 
-![Figure 1:Flowchart of the tools used. ](/home/aschafer/Documentos/Genomicas/Laboratorios/RegGenoLab/Variations/COPD/Flowchart.png)
+![Figure 1:Flowchart of the tools used. ](./Flowchart.png)
 
 # Retrieve variants     
 
@@ -55,7 +55,7 @@ For the variant search, I used a database created by Lucia Ramirez, which includ
 ## Disease associated variants  
 
 <div style = "text-align: justify">
-I started filtering the variants related to COPD, FEV1, and FVC. I created a bed file in which I kept the chromosome name, the start position, and the end. I also needed a vcf file; I base the columns that I needed from the vcf manual.        
+I started filtering the variants related to COPD, FEV1, and FVC. Then, I created a bed file where I kept the chromosome name, the start position, and the end. I also needed a vcf file, so I also creat it here.         
 </div>
 
 ```{bash, eval = F}
@@ -82,7 +82,7 @@ grep -wf Data/genes-symbol.txt Data/Gwas_Clinvar_Gtex_dbSNP_Joined.bed | sort -n
 ## Variants concatenation          
 
 <div style = "text-align: justify">
-Here I concatenate all the variants retrieve from the disease and gene association variants to end up with the final vcf and bed files. Two variants created a little bit of a problem because the reference allele was in the IUPAC code, so I eliminated them from both files. In this step, I also put on the corresponding header in each file.         
+Here I concatenate all the variants retrieve from the disease and gene association variants to end up with the final vcf and bed files. Two variants were having a problem because the reference allele was in the IUPAC code, so I removed them from both files. In this step, I also put on the corresponding header in each file.        
 </div> 
 
 ```{bash, eval = F}
@@ -99,7 +99,7 @@ grep '>' Data/JASPAR2020_CORE_vertebrates_non-redundant_pfms_jaspar.txt | tr -d 
 <div style = "text-align: justify">
 To identify the affected TFBS. I analyze motif changes with variation tools from Regulatory Sequence Analysis Tools (RSAT).        
 First, I needed to create a background model, so I used fetch-sequences, which receives a BED file and collects the sequences from the UCSC genome browser. I chose to retrieve 100pb upstream and 100pb downstream from the variant. And then, given that sequence, I created my background model with the tool create-background-model.            
-I used convert-variations to retrieve a varBed file from a VCF; this is a format from RSAT that facilitates the processing of the information of the variants. Then I used retrieve-variation-seq, which gives you the sequences surrounding the variant (30pb). Finally, I used variation-scan, which provides you with the probability of having a new instance in the sequence from the variant given the background model binding site (created before); this is done by processing different variants with the JASPAR non-redundant motif database and compares the scores and p-values to find the TFBS that are being affected.  
+I used convert-variations to retrieve a varBed file from a VCF; this is a format from RSAT that facilitates the processing of the information of the variants. Then I used retrieve-variation-seq, which gives you the sequences surrounding the variant (30pb). Finally, I used variation-scan, which provides you with the probability of having a new instance in the sequence from the variant given the background model binding site (created before); this is done by processing different variants with the JASPAR non-redundant motif database and comparing the scores and p-values to find the TFBS that are being affected. 
 </div> 
 
 ```{bash, eval = F}
@@ -111,7 +111,7 @@ rsat variation-scan -i  Results/RSAT/all_variants.varSeq -m /cm/shared/apps/rsat
 ```    
 
 <div style = "text-align: justify">          
-Once I had the results from variation-Scan, I analyze them. To do that, I filtered just the ones that fulfill quality requirements, and using the JASPAR data I added a column with the corresponding TF from the motif.  
+Once I had the results from variation-Scan, I analyzed them. To do that, I filtered just the ones that fulfill quality requirements, and using the JASPAR data, I added a column with the corresponding TF from the motif. 
 </div> 
 
 ```{r}
@@ -120,7 +120,7 @@ COPD_varScan <- COPD_varScan[,c(1, 22, 2:21)]
 ```     
 
 <div style = "text-align: justify"> 
-To make sure that my variants were affecting the TF, I realized two different negative controls. One with vSampler and the other one with matrix permutations, both explain later. And I compute both of them for tissue and blood data independently.      
+To make sure that my variants were affecting the TF, I realized two different negative controls. One with vSampler and the other one with matrix permutations, both explained later. And I compute both of them for tissue and blood data independently.      
 </div>      
 
 ## Tissue negative control   
@@ -136,8 +136,8 @@ Tissue_COPD_varScan <- COPD_varScan[COPD_varScan$TF %in% Tissue_meta_analysis$X,
 
 ### vSampler
 <div style = "text-align: justify">
-vSampler is a tool that receives the list of variants that you're using, and for each one of them retrieves random variants given eight different properties. This is used to compute a negative control.    
-To use vSampler, I needed to create a file with the chromosome name and the variant's position. For that, I used only the ones that were significant from variationScan and with that created the input file.         
+vSampler is a tool that receives the list of variants you're using, and for each one of them retrieves random variants given eight different properties. This is used to compute a negative control.    
+To use vSampler, I needed to create a file with the chromosome name and the variant's position. For that, I used only the significant ones from variationScan and created the input file.         
 </div>
 
 ```{r}
@@ -171,7 +171,7 @@ rm(Jaspar_Tissue_PFMatrix)
 ```      
 
 <div style = "text-align: justify">
-Again I used some tools from RSAT to perform the negative control, to do that I created 5 permutations of my matrices and then ran again variation-scan with the new matrix file. 
+Again I used some tools from RSAT to perform the negative control. To do that, I created five permutations of my matrices and then ran again variation-scan with the new matrix file.
 </div>  
 
 ```{bash, eval = F}
@@ -378,6 +378,8 @@ Tissue_data <- Tissue_data[Tissue_data$TF %in% GTEx_tissue_data[GTEx_tissue_data
 Tissue_data <- Tissue_data[Tissue_data$gene %in% GTEx_tissue_data[GTEx_tissue_data$Lung != 0,]$Description,]
 Tissue_data %>% htmlTable
 ```
+### Figure 2     
+![Figure 2: CCL2](./Results/Plots/CCL2.png)
 
 ### Blood VEP results
 <div style="text-align: justify">
@@ -410,23 +412,7 @@ head(Tissue_data) %>% htmlTable
 Now that I have all the results, I'm going to be doing the final tables to be able to interpret my results better. To do that I'll start with some tables that will have different information all together and then some figures with the best association. 
 </div>
 
-### Number of variant and transcriptional factors for each gene     
-
-```{r}
-# gene, num_variants, num_tfs, gene TE
-variant_tf_counter <- function(x, data, s){
-  gene_data <- data %>% filter(gene == x)
-  return(c(x, format(length(unique(gene_data$var_id)), nsmall = 0), length(unique(gene_data$TF)), s))
-}
-variants_tfs_count <- rbind(as.data.frame(t(sapply(X = unique(Tissue_data$gene), function(x){return(variant_tf_counter(x, Tissue_data, "tissue"))}))), as.data.frame(t(sapply(X = unique(Blood_data$gene), function(x){return(variant_tf_counter(x, Blood_data, "blood"))}))))
-rownames(variants_tfs_count) <- NULL
-colnames(variants_tfs_count) <- c("gene", "num_variants", "num_TFs", "analysis")
-variants_tfs_count <-variants_tfs_count[order(as.numeric(variants_tfs_count$num_TFs), decreasing = T),]
-write.table(variants_tfs_count, file = "Results/Tables/Gene_variants_tfs_counts.csv", row.names = F, quote = F, sep = "\t")
-head(variants_tfs_count) %>% htmlTable
-```
-
-### Variants and TFs for each gene 
+### Variants and TFs for each gene (Table 1)     
 
 ```{r}
 gene_variants_tfs_function <- function(x, data, s){
@@ -440,11 +426,11 @@ write.table(gene_variants_tfs, file = "Results/Tables/Gene_variants_tfs.csv", ro
 head(gene_variants_tfs) %>% htmlTable
 ```
 
-### variant, gene and TFs association     
+### variant, gene and TFs association (Table 2)     
 
 ```{r}
 variant_gene_tf <- rbind(cbind(unique(Tissue_data[,c(1, 5, 6, 7, 9)]), analysis = rep("tissue", times = 6)), cbind(unique(Blood_data[,c(1, 5, 6, 7, 9)]), analysis = rep("blood", times = 333)))
-write.table(variant_gene_tf, file = "Results/Tables/Variant_gene_tf.csv", row.names = F, quote = F, sep = "\t")
+write.table(variant_gene_tf, file = "./Results/Tables/Variant_gene_tf.csv", row.names = F, quote = F, sep = "\t")
 head(variant_gene_tf) %>% htmlTable()
 ```
 
@@ -465,14 +451,12 @@ TP53_NoOther <- as.data.frame(t(sapply(X = unique(TP53_NoOther$Consequence), fun
 colnames(TP53_NoOther) <- c("Consequence", "num_consequence", "num_TFs", "num_var")
 TP53_consequences <- rbind(TP53_NoOther, TP53_other)
 TP53_consequences <- data.frame(consequence = rep(TP53_consequences$Consequence, each = 3), num = rep(c("num_consequence", "num_TFs", "num_var"), times = nrow(TP53_consequences)), value = as.numeric(unlist(t(TP53_consequences[c(2:4)]))))
-ggsave( filename = "Results/Plots/TP53_consequences.png",
+ggsave( filename = "./Results/Plots/TP53_consequences.png",
 ggplot(data=TP53_consequences, aes(x = reorder(consequence, value), y=value, fill=num)) +
     geom_bar(stat="identity", position=position_dodge()) + theme(axis.text.y = element_text(size = 8)) + coord_flip() + labs(title = "TP53 consequences", y = "Appearances", x ="Consequence")
 )
 ```     
-![Figure 2: TP53 consequences](/home/aschafer/Documentos/Genomicas/Laboratorios/RegGenoLab/Variations/COPD/Results/Plots/TP53_consequences.png)
-
-![Figure 3: CCL2]()
+![Figure 3: TP53 consequences](./Results/Plots/TP53_consequences.png)
 
 ### FAM13A article
 
@@ -484,18 +468,18 @@ Table E3: Conditional analysis on 45 MPRA SNPs.
 
 ```{r, echo = FALSE, message = FALSE, eval = F}
 library(VennDiagram)
-table1_var <- unique(unlist(read.csv("FAM13A_paper/table1_var.csv", col.names = F)))
-table2_var <- unique(unlist(read.csv("FAM13A_paper/table2_var.csv", col.names = F)))
-table3_var <- unique(unlist(read.csv("FAM13A_paper/table3_var.csv", col.names = F)))
+table1_var <- unique(unlist(read.csv("./FAM13A_paper/table1_var.csv", col.names = F)))
+table2_var <- unique(unlist(read.csv("./FAM13A_paper/table2_var.csv", col.names = F)))
+table3_var <- unique(unlist(read.csv("./FAM13A_paper/table3_var.csv", col.names = F)))
 COPD_var <- unique(COPD_varScan$var_id)
 Blood_var <- Blood_data$var_id
 Tissue_var <- Tissue_data$var_id
 
-venn.diagram(x = list(table1_var, COPD_var, Blood_var), category.names = c("Table1", "VarScan", "Blood"), filename = "FAM13A_paper/variantes_table1.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
+venn.diagram(x = list(table1_var, COPD_var, Blood_var), category.names = c("Table1", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table1.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
 
-venn.diagram(x = list(table2_var, COPD_var, Blood_var), category.names = c("Table2", "VarScan", "Blood"), filename = "FAM13A_paper/variantes_table2.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
+venn.diagram(x = list(table2_var, COPD_var, Blood_var), category.names = c("Table2", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table2.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
 
-venn.diagram(x = list(table3_var, COPD_var, Blood_var), category.names = c("Table3", "VarScan", "Blood"), filename = "FAM13A_paper/variantes_table3.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
+venn.diagram(x = list(table3_var, COPD_var, Blood_var), category.names = c("Table3", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table3.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
 ```
 
 Significative variants that are in table 1, that are also in our blood data (from tissue there weren't any junction) :       
