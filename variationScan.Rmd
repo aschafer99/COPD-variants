@@ -407,6 +407,10 @@ Blood_data <- Blood_data[Blood_data$gene %in% GTEx_blood_data[GTEx_blood_data$`W
 head(Tissue_data) %>% htmlTable
 ```
 
+### Figure 3     
+![Figure 3: FAM13A](./Results/Plots/FAM13A.png)
+
+
 ## Result analysis
 <div style="text-align: justify">
 Now that I have all the results, I'm going to be doing the final tables to be able to interpret my results better. To do that I'll start with some tables that will have different information all together and then some figures with the best association. 
@@ -456,7 +460,7 @@ ggplot(data=TP53_consequences, aes(x = reorder(consequence, value), y=value, fil
     geom_bar(stat="identity", position=position_dodge()) + theme(axis.text.y = element_text(size = 8)) + coord_flip() + labs(title = "TP53 consequences", y = "Appearances", x ="Consequence")
 )
 ```     
-![Figure 3: TP53 consequences](./Results/Plots/TP53_consequences.png)
+![Figure 4: TP53 consequences](./Results/Plots/TP53_consequences.png)
 
 ### FAM13A article
 
@@ -495,8 +499,42 @@ rs7695177
 
 Significant variants on table 2 that are in our blood data:         
 rs7687539
-rs7695177
+rs76951777
 
 
+
+### Circos
+
+```{r}
+Tissue_genes <- UCSC_genes[UCSC_genes$name2 %in% Tissue_data$gene,]
+Tissue_genes <- merge(Tissue_genes, Tissue_data, by.x = "name2", by.y = "gene")
+Tissue_genes <- Tissue_genes[c(1, 4, 8, 10, 11),c(4, 6, 7, 24, 1)]
+Tissue_genes$chrom <- paste("hs", Tissue_genes$chrom, sep = "")
+Tissue_genes$name2 <- paste("id", Tissue_genes$name2, sep = "=")
+Tissue_genes$col <- "fill_color=blue"
+
+Blood_genes <- UCSC_genes[UCSC_genes$name2 %in% Blood_data$gene,]
+Blood_genes <- merge(Blood_genes, Blood_data, by.x = "name2", by.y = "gene")
+Blood_genes <- unique(Blood_genes[,c(4, 6, 7, 24, 1)])[c(3, 5, 7, 9, 10, 12, 13, 19, 27, 28, 32, 34, 40, 41, 47),]
+Blood_genes$chrom <- paste("hs", Blood_genes$chrom, sep = "")
+Blood_genes$name2 <- paste("id", Blood_genes$name2, sep = "=")
+Blood_genes$col <- "fill_color=red"
+
+write.table(rbind(Tissue_genes, Blood_genes)[,c(1:5)], file = "segdup.genes.hist.txt", col.names = F, row.names = F, sep = " ", quote = F)
+```
+
+```{r}
+Tissue_meta_genes <- UCSC_genes[UCSC_genes$name2 %in% Tissue_meta_analysis_f$X,]
+Tissue_meta_genes <- Tissue_meta_genes[,c(3, 5, 6, 13)] %>% distinct(name2, .keep_all = TRUE)
+Tissue_meta_genes$chrom <- paste("hs", Tissue_meta_genes$chrom, sep = "")
+Tissue_meta_genes$name2 <- paste("id", Tissue_meta_genes$name2, sep = "=")
+
+Blood_meta_genes <- UCSC_genes[UCSC_genes$name2 %in% Blood_meta_analysis_f$X,]
+Blood_meta_genes <- Blood_meta_genes[,c(3, 5, 6, 13)] %>% distinct(name2, .keep_all = TRUE)
+Blood_meta_genes$chrom <- paste("hs", Blood_meta_genes$chrom, sep = "")
+Blood_meta_genes$name2 <- paste("id", Blood_meta_genes$name2, sep = "=")
+
+write.table(rbind(Tissue_meta_genes, Blood_meta_genes), file = "segdup.meta.genes.hist.txt", col.names = F, row.names = F, sep = " ", quote = F)
+```
 
 
