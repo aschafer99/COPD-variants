@@ -1,4 +1,4 @@
-; fetch-sequences  -i Data/NC_vSampler.bed -o Results/RSAT/NC_vSampler_bg.fasta -v 1 -downstr_ext 100 -upstr_ext 100 -genome hg38
+; fetch-sequences  -i Data/TissueNC_vSampler.bed -o Results/RSAT/TissueNC_vSampler_bg.fasta -v 1 -downstr_ext 100 -upstr_ext 100 -genome hg38
 ; Program version       	1.34
 ; Genome                	hg38
 ; DAS server URL        	http://genome.cse.ucsc.edu/cgi-bin/das/hg38
@@ -7,19 +7,19 @@
 ; Downstream extension  	100
 ; Invalid rows in query file	1
 ; Input files
-;	input        	Data/NC_vSampler.bed
+;	input        	Data/TissueNC_vSampler.bed
 ; Output files
-;	log          	Results/RSAT/NC_vSampler_bg_log.txt
-;	output       	Results/RSAT/NC_vSampler_bg.fasta
+;	output       	Results/RSAT/TissueNC_vSampler_bg.fasta
+;	log          	Results/RSAT/TissueNC_vSampler_bg_log.txt
 ; Skipped	1	rows in query file
 ;	line 1	chrom	chromStar	chromEnd	Invalid chromosome name
-; sequences           	234
-; length sum          	47034
-; Host name	compute-00-03
-; Job started	2021-06-29.162946
-; Job done	2021-06-29.162947
+; sequences           	398
+; length sum          	79998
+; Host name	compute-00-02
+; Job started	2022-01-07.011013
+; Job done	2022-01-07.011015
 ; Seconds	0.28
 ;	user	0.28
-;	system	0.05
+;	system	0.04
 ;	cuser	0
 ;	csystem	0

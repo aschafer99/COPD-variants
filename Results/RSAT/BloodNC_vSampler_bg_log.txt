@@ -13,13 +13,13 @@
 ;	log          	Results/RSAT/BloodNC_vSampler_bg_log.txt
 ; Skipped	1	rows in query file
 ;	line 1	chrom	chromStar	chromEnd	Invalid chromosome name
-; sequences           	234
-; length sum          	47034
-; Host name	compute-00-03
-; Job started	2021-07-13.112501
-; Job done	2021-07-13.112503
-; Seconds	0.28
-;	user	0.28
-;	system	0.05
+; sequences           	398
+; length sum          	79998
+; Host name	compute-00-01
+; Job started	2022-01-07.011702
+; Job done	2022-01-07.011703
+; Seconds	1.92
+;	user	1.92
+;	system	0.32
 ;	cuser	0
-;	csystem	0
+;	csystem	0.02

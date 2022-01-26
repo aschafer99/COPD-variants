@@ -14,4 +14,4 @@ Number of insufficient match: 0
 Proportion of insufficient match:  0.0000
 Median size of insufficient pool: 0.0
 Median proportion of of insufficient pool:  0.000
-Number of variants excluded: 4760
+Number of variants excluded: 7750
