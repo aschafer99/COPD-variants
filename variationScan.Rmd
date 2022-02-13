@@ -52,37 +52,36 @@ To do that, I focused on retrieving the variants previously annotated for COPD g
 # Retrieve variants     
 
 <div style = "text-align: justify">
-For the variant search, I used a database created by Lucia Ramirez, which included data from the Genome-wide association study (GWAS), ClinVar, Genotype-Tissue Expression (GTEx) project, and the Single Nucleotide Polymorphism Database (dbSNP). I searched for variants that were associated with disease and the genes from the meta-analysis from Ana B.        
+For the variant search, I used a database created by Lucia Ramirez, which included data from the Genome-Wide Association Study (GWAS), ClinVar, Genotype-Tissue Expression (GTEx) project, and the Single Nucleotide Polymorphism Database (dbSNP). I searched for variants that were associated with the disease and the genes from the meta-analysis from Ana B.        
 </div>
 
 ## Disease associated variants  
 
 <div style = "text-align: justify">
-I started filtering the variants related to COPD, FEV1, FVC, Chronic Obstructive Airway Disease, Chronic Lung Injury, Lung Diseases Obstructive and Emphysema. Then, I created a file where I kept the variant ID, chromosome name, and the position. I retrieved 4,370 variants from here.          
+I started filtering the variants related to COPD, FEV1, FVC and Emphysema. Then, I created a file where I kept the variant ID, chromosome name, and the position. I retrieved 4,370 variants from here.          
 </div>
 
 ```{bash, eval = F}
 # I realized the filter with grep, using -E, which determines that I will be applying regular expression.       
 # Also, I sorted my results with sort, using the parameters -n (so that its order in numerical order) and -k (to specify the reference column).  
 # The parameter -F "\t" from awk specifies that the delimitation of columns is by tabs. 
-# Nota: no se encontraron variantes asociadas con Chronic Obstructive Airway Disease, Chronic Lung Injury and Lung Diseases Obstructive
 grep -E "(COPD|FVC|FEV1|Chronic Obstructive Airway Disease|Chronic Lung Injury|Lung Diseases Obstructive|Emphysema)" Data/Gwas_Clinvar_Gtex_dbSNP_Joined.bed | awk -F"\t" '{OFS=FS}{if ($3 == "NA") $3 = $20}{if ($15 == "NA") $15 = $22}{if ($16 == "NA") $16 = $4}{if ($3 != "NA") print $1 "\t" $2 "\t" $3 "\t" $15 "\t" $16}' | sort -nk 2 | uniq > Data/disease-associated-variants.txt
 ```
 
 ## Gene associated variants    
 
 <div style = "text-align: justify">
-First I created a file with all the genes from the meta-analysis, with the corresponding filters (qval.random <= 0.05 & I2 < 0.4 & num_exp >= 9). I obtained 1,717 genes (161 from tissue and 1570 from tissue).       
+To retrieve the variants associated to the genes, first I created a file with all the genes from the meta-analysis, with the corresponding filters (Tissue = qval.random <= 0.05 & I2 < 0.4 & num_exp >= 9 and blood = qval.random <= 0.05 & I2 < 0.4 & num_exp >= 4). I obtained 1,716 unique genes (161 from tissue and 1570 from blood).       
 </div>   
 
-```{r}
+```{r, warning = F}
 Tissue_meta_analysis_f <- filter(Tissue_meta_analysis, qval.random <= 0.05 & I2 < 0.4 & num_exp >= 9)
 Blood_meta_analysis_f <- filter(Blood_meta_analysis, qval.random <= 0.05 & I2 < 0.4 & num_exp >= 4)
 write.csv(unique(c(Tissue_meta_analysis_f$X, Blood_meta_analysis_f$X)), "Data/meta-genes.txt", row.names = F, col.names = F, quote = F)
 ```
 
 <div style = "text-align: justify">
-I searched for the variants associated with the final genes from the meta-analysis (1,717). I retrieved 70,134 variants from here.        
+I searched for the variants associated with the final genes from the meta-analysis (1,716). I retrieved 70,134 variants from here.        
 </div>        
 
 ```{bash, eval = F}
@@ -91,20 +90,17 @@ grep -wf Data/meta-genes.txt Data/Gwas_Clinvar_Gtex_dbSNP_Joined.bed | awk -F"\t
 ```         
 
 ## Variants concatenation and filtering
-
 <div style = "text-align: justify">
-I joined both of my files and end up with 74,142 variants. Then, I looked for the coordinates of the genes from UCSC genome browser and assure that the variants were close to the genes. By doing I ended up with 59,648 variants to begin with the analysis.           
+I joined both of my files and end up with 74,142 variants. Then, I looked for the coordinates of the genes from UCSC genome browser and assure that the variants were close to the genes. By doing this I ended up with 59,648 variants to begin with the analysis.      
+
+Once I had all the variants ID I created the corresponding files for the analysis. I created a bed file in which I kept the chromosome name, the start position, and the end. I also needed a vcf file; I base the columns that I needed from the vcf manual.  In this step, I also put on the corresponding header in each file.  
 </div> 
 
 ```{bash, eval = F}
 cat Data/disease-associated-variants.txt Data/genes-associated-variants.txt | sort -nk 2 | uniq > Data/all_variants_NoFilter.txt
 ```
 
-<div style = "text-align: justify">
-Once I have all the variants ID I created the corresponding files for the analysis. I created a bed file in which I kept the chromosome name, the start position, and the end. I also needed a vcf file; I base the columns that I needed from the vcf manual.  In this step, I also put on the corresponding header in each file.        
-</div> 
-
-```{r, eval = F}
+```{r}
 all_variants_NoFilter <- read.table("Data/all_variants_NoFilter.txt")
 colnames(all_variants_NoFilter) <- c("Chr", "Pos", "ID", "Ref", "Alt")
 all_variants_NoFilter$Chr <- gsub("chr", "", all_variants_NoFilter$Chr)
@@ -115,14 +111,13 @@ bed <- all_variants_NoFilter[all_variants_NoFilter$ID %in% all_variants_Filter, 
 bed$start <- bed$Pos -1
 writeLines(c("chrom \t chromStar \t chromEnd"), "Data/all_variants.bed")
 write.table(bed[,c(1, 3, 2)], "Data/all_variants.bed", row.names = F, col.names = F, quote = F, sep = "\t", append = T)
-# Need to remove R and Y, because RSAT don't recognize annotation. 
+# Need to remove R and Y, because RSAT don't recognize IUPAC annotation. 
 ```
 
 ```{bash, eval = F}
 # I create a file with the JASPAR TF IDs since I'll be needing this later.
 grep '>' Data/JASPAR2020_CORE_vertebrates_non-redundant_pfms_jaspar.txt | tr -d '>' > Data/JASPAR_IDs.txt
 ```       
-
 
 # Identify affected TFBS
 
@@ -145,7 +140,6 @@ rsat variation-scan -i  Results/RSAT/all_variants.varSeq -m /cm/shared/apps/rsat
 Once I had the results from variation-Scan, I analyzed them. To do that, I filtered just the ones that fulfill quality requirements, and using the JASPAR data, I added a column with the corresponding TF from the motif. 
 </div> 
 
-Antes tenia 278,708 y con el filtro nos quedamos con 11,109. Ahora tenemos 2,481,106 y con el filtro tenemos 99,492.
 
 ```{r}
 COPD_varScan <- read.csv("Results/RSAT/all_variants_varScan.tsv", header = T, sep = "\t", comment.char = ";") %>% filter(pval_ratio > 10 & (best_w == 0 | worst_w == 0 | (best_w * worst_w) < 0) & best_pval < 1e-4 ) %>% merge(JASPAR_IDs, by = "X.ac_motif", all.x = T)
@@ -159,7 +153,7 @@ To make sure that my variants were affecting the TF, I realized two different ne
 ## Tissue negative control   
 
 <div style = "text-align: justify">          
-For the tissue, I used the Tissue meta-analysis realized by Ana B and filtered just the TFs on the tissue data. So, from 452 unique TFs, I ended up with 354 TFs. 
+For the tissue, I used the Tissue meta-analysis with the filtered previously mentioned. From them, I searched for the TFs on this data-set tissue data.  
 </div> 
 
 ```{r}
@@ -265,14 +259,10 @@ rm(Tissue_vSampler_distribution)
 rm(Tissue_perm_distribution)
 ```     
 
-<div style = "text-align: justify">          
-In tissue, from 354 TFs, I find 315 that were being significant in my data.      
-</div> 
-
 ## Blood negative control    
 
 <div style = "text-align: justify">   
-I used the blood meta-analysis realized by Ana B and filtered just the TFs on the blood data. Here I found 357 TFs.      
+I used the blood meta-analysis realized by Ana B and filtered just the TFs on the blood data.       
 </div>      
 ```{r}
 # debo de arreglar esto
@@ -357,10 +347,6 @@ rm(Blood_vSampler_distribution)
 rm(Blood_perm_distribution)
 ```     
 
-<div style = "text-align: justify">          
-In this case, from 357 TFs, I find 311 that were being significant in my data.  
-</div> 
-
 # Gene association 
 <div style="text-align: justify">
 Given my results I associated each variant with the closest gene given the meta-analysis realized by Ana B.
@@ -408,9 +394,9 @@ Tissue_data <- Tissue_data[Tissue_data$TF %in% GTEx_tissue_data[GTEx_tissue_data
 Tissue_data <- Tissue_data[Tissue_data$gene %in% GTEx_tissue_data[GTEx_tissue_data$Lung != 0,]$Description,]
 head(Tissue_data) %>% htmlTable
 ```
+
 ### Figure 2     
 ![Figure 2: CCL2](./Results/Plots/CCL2.png)
-rs1024611
 
 ### Blood VEP results
 <div style="text-align: justify">
@@ -425,7 +411,7 @@ Blood_data$TF.TE.random <- sapply(Blood_data$TF, function(x){return(filter(Blood
 Blood_data <- Blood_data[,c(1, 59, 53, 50, 51, 71, 2, 9, 3, 5, 6, 12:14, 19, 20, 29, 41)]
 Blood_data <- unique(Blood_data)
 colnames(Blood_data) <- c("var_id", "varScan_pval.ratio", "var_coord", "motif", "TF", "TF_TE.random", "gene", "gene_qval.random", "gene_TE.random", "gene_tau2", "gene_I2", "ALT", "Consequence", "IMPACT", "EXON", "INTRON", "DISTANCE", "CLIN_SIG")
-# UCSC filter
+# UCSC genes
 Blood_UCSC_genes <- UCSC_genes[UCSC_genes$name2 %in% Blood_meta_analysis_f$X,]
 Blood_varScan_coord <- as.data.frame(matrix(unlist(str_split(unlist(str_split(unlist(str_split(Blood_significant_varScan$var_coord, ":")), "-")), "_")), ncol = 4, byrow = T)) 
 Blood_genes <- unique(unlist(sapply(c(1:nrow(Blood_significant_varScan)), function(x){return(filter(Blood_UCSC_genes, (chrom == Blood_varScan_coord$V1[x]) & ((cdsStart-5000) <= Blood_varScan_coord$V2[x]) & ((cdsStart+5000) >= Blood_varScan_coord$V3[x]))$name2)})))
@@ -448,7 +434,7 @@ Now that I have all the results, I'm going to be doing the final tables to be ab
 
 ### Variants and TFs for each gene (Table 1)     
 
-```{r}
+```{r, warning = F}
 gene_variants_tfs_function <- function(x, data, s){
   gene_data <- data %>% filter(gene == x)
   return(c(x, toString(unique(gene_data$var_id)), toString(unique(gene_data$TF)), s))
@@ -462,7 +448,7 @@ head(gene_variants_tfs) %>% htmlTable
 
 ### variant, gene and TFs association (Table 2)     
 
-```{r}
+```{r, warning = F}
 variant_gene_tf <- rbind(cbind(unique(Tissue_data[,c(1, 5, 6, 7, 9)]), analysis = rep("tissue", times = nrow(unique(Tissue_data[,c(1, 5, 6, 7, 9)])))), cbind(unique(Blood_data[,c(1, 5, 6, 7, 9)]), analysis = rep("blood", times = nrow(unique(Blood_data[,c(1, 5, 6, 7, 9)])))))
 write.table(variant_gene_tf, file = "./Results/Tables/Variant_gene_tf.csv", row.names = F, quote = F, sep = "\t")
 head(variant_gene_tf) %>% htmlTable()
@@ -491,109 +477,5 @@ ggplot(data=TP53_consequences, aes(x = reorder(consequence, value), y=value, fil
 )
 ```     
 ![Figure 4: TP53 consequences](./Results/Plots/TP53_consequences.png)
-
-### FAM13A article
-
-We found this article "Identification of Functional Variants in the FAM13A Chronic Obstructive Pulmonary Disease Genome-Wide Association Study Locus by Massively Parallel Reporter Assays", where they have 3 different suplementary tables, so I check which variants from this tables we had in common.
-
-Table E1: SNPs with significant expression-regulating effects in MPRA assay.
-Table E2: SNPs with significant allele-specific expression in MPRA.
-Table E3: Conditional analysis on 45 MPRA SNPs.
-
-```{r, echo = FALSE, message = FALSE, eval = F}
-library(VennDiagram)
-table1_var <- unique(unlist(read.csv("./FAM13A_paper/table1_var.csv", col.names = F)))
-table2_var <- unique(unlist(read.csv("./FAM13A_paper/table2_var.csv", col.names = F)))
-table3_var <- unique(unlist(read.csv("./FAM13A_paper/table3_var.csv", col.names = F)))
-COPD_var <- unique(COPD_varScan$var_id)
-Blood_var <- Blood_data$var_id
-Tissue_var <- Tissue_data$var_id
-
-venn.diagram(x = list(table1_var, COPD_var, Blood_var), category.names = c("Table1", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table1.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
-
-venn.diagram(x = list(table2_var, COPD_var, Blood_var), category.names = c("Table2", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table2.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
-
-venn.diagram(x = list(table3_var, COPD_var, Blood_var), category.names = c("Table3", "VarScan", "Blood"), filename = "./FAM13A_paper/variantes_table3.png", output = T, fontface = "bold", fill = c("palegreen", "lightskyblue2", "thistle1"),  lty = 'blank', cat.fontface = "bold")
-```
-
-Significative variants that are in table 1, that are also in our blood data (from tissue there weren't any junction) :       
-rs2609280 
-rs2904259
-rs4505789
-rs7687539*
-rs7695177*
-
-Significant variants on table 2 that are in our blood data:         
-rs7687539
-rs7695177
-
-Significant variants on table 2 that are in our blood data:         
-rs7687539
-rs76951777
-
-
-
-### Circos
-
-```{r}
-Tissue_genes <- UCSC_genes[UCSC_genes$name2 %in% Tissue_data$gene,]
-Tissue_genes <- merge(Tissue_genes, Tissue_data, by.x = "name2", by.y = "gene")
-Tissue_genes <- Tissue_genes[c(1, 4, 8, 10, 11),c(4, 6, 7, 24, 1)]
-Tissue_genes$chrom <- paste("hs", Tissue_genes$chrom, sep = "")
-Tissue_genes$name2 <- paste("id", Tissue_genes$name2, sep = "=")
-Tissue_genes$col <- "fill_color=blue"
-
-Blood_genes <- UCSC_genes[UCSC_genes$name2 %in% Blood_data$gene,]
-Blood_genes <- merge(Blood_genes, Blood_data, by.x = "name2", by.y = "gene")
-Blood_genes <- unique(Blood_genes[,c(4, 6, 7, 24, 1)])[c(3, 5, 7, 9, 10, 12, 13, 19, 27, 28, 32, 34, 40, 41, 47),]
-Blood_genes$chrom <- paste("hs", Blood_genes$chrom, sep = "")
-Blood_genes$name2 <- paste("id", Blood_genes$name2, sep = "=")
-Blood_genes$col <- "fill_color=red"
-
-write.table(rbind(Tissue_genes, Blood_genes)[,c(1:5)], file = "segdup.genes.hist.txt", col.names = F, row.names = F, sep = " ", quote = F)
-```
-
-```{r}
-Tissue_meta_genes <- UCSC_genes[UCSC_genes$name2 %in% Tissue_meta_analysis_f$X,]
-Tissue_meta_genes <- Tissue_meta_genes[,c(3, 5, 6, 13)] %>% distinct(name2, .keep_all = TRUE)
-Tissue_meta_genes$chrom <- paste("hs", Tissue_meta_genes$chrom, sep = "")
-Tissue_meta_genes$name2 <- paste("id", Tissue_meta_genes$name2, sep = "=")
-
-Blood_meta_genes <- UCSC_genes[UCSC_genes$name2 %in% Blood_meta_analysis_f$X,]
-Blood_meta_genes <- Blood_meta_genes[,c(3, 5, 6, 13)] %>% distinct(name2, .keep_all = TRUE)
-Blood_meta_genes$chrom <- paste("hs", Blood_meta_genes$chrom, sep = "")
-Blood_meta_genes$name2 <- paste("id", Blood_meta_genes$name2, sep = "=")
-
-write.table(rbind(Tissue_meta_genes, Blood_meta_genes), file = "segdup.meta.genes.hist.txt", col.names = F, row.names = F, sep = " ", quote = F)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
