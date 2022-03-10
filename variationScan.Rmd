@@ -47,7 +47,7 @@ Chronic Obstructive Pulmonary Disease (COPD) is a lung condition characterized b
 To do that, I focused on retrieving the variants previously annotated for COPD genes and the disease, then analyzing them with Regulatory Sequence Analysis Tools (RSAT) to retrieve transcriptional factor motifs where the variants are affecting. Then I searched for genes close to the variants and filtered for those in a meta-analysis (realized by Ana Beatriz Villaseñor), which complemented the data from PulmonDB.      
 </div>      
 
-![Figure 1:Flowchart of the tools used. ](./Flowchart.png)
+![Figure 1:Flowchart of the tools used. ](./Flowchart.jpeg)
 
 # Retrieve variants     
 
@@ -265,7 +265,6 @@ rm(Tissue_perm_distribution)
 I used the blood meta-analysis realized by Ana B and filtered just the TFs on the blood data.       
 </div>      
 ```{r}
-# debo de arreglar esto
 Blood_COPD_varScan <- COPD_varScan[COPD_varScan$TF %in% Blood_meta_analysis$X,]
 ``` 
 
@@ -423,9 +422,9 @@ Blood_data <- Blood_data[Blood_data$gene %in% GTEx_blood_data[GTEx_blood_data$`W
 head(Blood_data) %>% htmlTable
 ```
 
-### Figure 3     
-![Figure 3: FAM13A](./Results/Plots/FAM13A.png)
+There're 1964 variants. I ran all of them in VEP, and I obtain the same 1964 variants, associated with 966 genes. From there I first remove the ones that weren't in our filter lood meta-analysis (1570 genes) and retrieve 427 genes. Then I did another filter with the UCSC, removing all the genes that aren't close to the variants, we obtain 386 genes. After that, we remove the TFs that in normal contidions are not being expressed (TPM == 0), so finally we find 354 significant genes. 
 
+If I do the analysis without VEP, and only search for the genes that are close to the variants, I obtain 394 genes. The main difference is that with VEP I obtain more information about the association. 
 
 ## Result analysis
 <div style="text-align: justify">
@@ -441,7 +440,7 @@ gene_variants_tfs_function <- function(x, data, s){
 }
 gene_variants_tfs <- rbind(as.data.frame(t(sapply(X = unique(Tissue_data$gene), function(x){return(gene_variants_tfs_function(x, Tissue_data, "tissue"))}))), as.data.frame(t(sapply(X = unique(Blood_data$gene), function(x){return(gene_variants_tfs_function(x, Blood_data, "blood"))}))))
 rownames(gene_variants_tfs) <- NULL
-colnames(gene_variants_tfs) <- c("gene", "variants", "analysis")
+colnames(gene_variants_tfs) <- c("gene", "variants", "TF", "analysis")
 write.table(gene_variants_tfs, file = "Results/Tables/Gene_variants_tfs.csv", row.names = F, quote = F, sep = "\t")
 head(gene_variants_tfs) %>% htmlTable
 ```
@@ -477,5 +476,3 @@ ggplot(data=TP53_consequences, aes(x = reorder(consequence, value), y=value, fil
 )
 ```     
 ![Figure 4: TP53 consequences](./Results/Plots/TP53_consequences.png)
-
-
