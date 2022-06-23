@@ -1,0 +1,114 @@
+; retrieve-variation-seq -species Homo_sapiens -assembly GRCh38 -i Results/RSAT/CCL2.varBed -format varBed -mml 30 -v 1 -o Results/RSAT/CCL2.varSeq
+; Input  file
+; 	Results/RSAT/CCL2.varBed
+; Output file
+; 	Results/RSAT/CCL2.varSeq
+;	Column contents
+;	chr	Chromosome
+;	start	Start position
+;	end	End position
+;	strand	Strand
+;	id	Identifier
+;	soterm	Sequence ontology (SO) term describing variation type
+;	ref_var	Reference variant
+;	alt_var	Alternative variant
+;	allele_freq	Frequency of the current allele
+;	seq	Sequence of the current variant, flanked by a user-specified neighbouring region
+#chr	start	end	strand	id	soterm	ref_var	alt_var	allele_freq	seq
+17	34250300	34250301	+	rs150078538	SNV	T	G	NA	tgtgcctgtagtcccagctactcgggaggcGgaggcaggagaacctcttgaatccaggagg
+17	34250300	34250301	+	rs150078538	SNV	T	T	NA	tgtgcctgtagtcccagctactcgggaggcTgaggcaggagaacctcttgaatccaggagg
+17	34251338	34251339	+	rs1860189	SNV	A	G	NA	acccacatcagtctcctccctctagggctcGggtgctaatctgtgagggctggctcagaag
+17	34251338	34251339	+	rs1860189	SNV	A	A	NA	acccacatcagtctcctccctctagggctcAggtgctaatctgtgagggctggctcagaag
+17	34251338	34251339	+	rs1860189	SNV	A	G	NA	acccacatcagtctcctccctctagggctcGggtgctaatctgtgagggctggctcagaag
+17	34251338	34251339	+	rs1860189	SNV	A	A	NA	acccacatcagtctcctccctctagggctcAggtgctaatctgtgagggctggctcagaag
+17	34251403	34251404	+	rs111816302	SNV	C	T	NA	tctaaagaacaagcctcttgcttcctcaggTatcactactcctcaccaccatcacccccac
+17	34251403	34251404	+	rs111816302	SNV	C	C	NA	tctaaagaacaagcctcttgcttcctcaggCatcactactcctcaccaccatcacccccac
+17	34251536	34251537	+	rs1860188	SNV	C	T	NA	gagtattcttggctactgcatgcaattagaTctggggcagatccaatccagaaagcaagaa
+17	34251536	34251537	+	rs1860188	SNV	C	C	NA	gagtattcttggctactgcatgcaattagaCctggggcagatccaatccagaaagcaagaa
+17	34251536	34251537	+	rs1860188	SNV	C	T	NA	gagtattcttggctactgcatgcaattagaTctggggcagatccaatccagaaagcaagaa
+17	34251536	34251537	+	rs1860188	SNV	C	C	NA	gagtattcttggctactgcatgcaattagaCctggggcagatccaatccagaaagcaagaa
+17	34251835	34251836	+	rs3917878	SNV	C	T	NA	cagaaataagcaaaccagcacaaatgtagcTattcgtcttctatctcaccttgagcctgtc
+17	34251835	34251836	+	rs3917878	SNV	C	C	NA	cagaaataagcaaaccagcacaaatgtagcCattcgtcttctatctcaccttgagcctgtc
+17	34252303	34252304	+	rs3917902	SNV,SNV	G	A	NA	gtctgcagcgatgaccaaggttcatgcagaAgatcttagtggtggggtcagaccccgggag
+17	34252303	34252304	+	rs3917902	SNV,SNV	G	T	NA	gtctgcagcgatgaccaaggttcatgcagaTgatcttagtggtggggtcagaccccgggag
+17	34252303	34252304	+	rs3917902	SNV,SNV	G	G	NA	gtctgcagcgatgaccaaggttcatgcagaGgatcttagtggtggggtcagaccccgggag
+17	34252329	34252330	+	rs77770153	SNV,SNV	G	A	NA	cagaggatcttagtggtggggtcagaccccAggaggaatgaagaaagcattattcaccaag
+17	34252329	34252330	+	rs77770153	SNV,SNV	G	C	NA	cagaggatcttagtggtggggtcagaccccCggaggaatgaagaaagcattattcaccaag
+17	34252329	34252330	+	rs77770153	SNV,SNV	G	G	NA	cagaggatcttagtggtggggtcagaccccGggaggaatgaagaaagcattattcaccaag
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	A	NA	ccttgtgtgtccccaagcgagagtccaaccAaggtttgtgccagagcctaacccaggcttg
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	G	NA	ccttgtgtgtccccaagcgagagtccaaccGaggtttgtgccagagcctaacccaggcttg
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	C	NA	ccttgtgtgtccccaagcgagagtccaaccCaggtttgtgccagagcctaacccaggcttg
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	A	NA	ccttgtgtgtccccaagcgagagtccaaccAaggtttgtgccagagcctaacccaggcttg
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	G	NA	ccttgtgtgtccccaagcgagagtccaaccGaggtttgtgccagagcctaacccaggcttg
+17	34252511	34252512	+	rs2857654	SNV,SNV	C	C	NA	ccttgtgtgtccccaagcgagagtccaaccCaggtttgtgccagagcctaacccaggcttg
+17	34252768	34252769	+	rs1024611	SNV	A	G	NA	tgacagagcagaagtgggaggcagacagctGtcactttccagaagactttcttttctgatt
+17	34252768	34252769	+	rs1024611	SNV	A	A	NA	tgacagagcagaagtgggaggcagacagctAtcactttccagaagactttcttttctgatt
+17	34252768	34252769	+	rs1024611	SNV	A	G	NA	tgacagagcagaagtgggaggcagacagctGtcactttccagaagactttcttttctgatt
+17	34252768	34252769	+	rs1024611	SNV	A	A	NA	tgacagagcagaagtgggaggcagacagctAtcactttccagaagactttcttttctgatt
+17	34252768	34252769	+	rs1024611	SNV	A	G	NA	tgacagagcagaagtgggaggcagacagctGtcactttccagaagactttcttttctgatt
+17	34252768	34252769	+	rs1024611	SNV	A	A	NA	tgacagagcagaagtgggaggcagacagctAtcactttccagaagactttcttttctgatt
+17	34252794	34252795	+	rs3917883	SNV,SNV	T	C	NA	agctatcactttccagaagactttcttttcCgattcatacccttcaccttccctgtgttta
+17	34252794	34252795	+	rs3917883	SNV,SNV	T	G	NA	agctatcactttccagaagactttcttttcGgattcatacccttcaccttccctgtgttta
+17	34252794	34252795	+	rs3917883	SNV,SNV	T	T	NA	agctatcactttccagaagactttcttttcTgattcatacccttcaccttccctgtgttta
+17	34252938	34252939	+	rs3917903	SNV,SNV,SNV	G	A	NA	agcctatgtgaacactcagccagcaaagctAggaagtttttctctgtgaccatgggctaat
+17	34252938	34252939	+	rs3917903	SNV,SNV,SNV	G	C	NA	agcctatgtgaacactcagccagcaaagctCggaagtttttctctgtgaccatgggctaat
+17	34252938	34252939	+	rs3917903	SNV,SNV,SNV	G	T	NA	agcctatgtgaacactcagccagcaaagctTggaagtttttctctgtgaccatgggctaat
+17	34252938	34252939	+	rs3917903	SNV,SNV,SNV	G	G	NA	agcctatgtgaacactcagccagcaaagctGggaagtttttctctgtgaccatgggctaat
+17	34253211	34253212	+	rs1024610	SNV	T	A	NA	caccaagttcatggtaaaggatgcactaacAgattagagagaggtttcccctgatatgagg
+17	34253211	34253212	+	rs1024610	SNV	T	T	NA	caccaagttcatggtaaaggatgcactaacTgattagagagaggtttcccctgatatgagg
+17	34253538	34253539	+	rs3760399	SNV	A	G	NA	tttgtaattccaccagagtctgaaatggccGctccatagagtctctgctctgggattctcc
+17	34253538	34253539	+	rs3760399	SNV	A	A	NA	tttgtaattccaccagagtctgaaatggccActccatagagtctctgctctgggattctcc
+17	34253800	34253801	+	rs3091332	SNV	A	T	NA	cctgactccctgaatgcactcaacaatgccTttactgaccacttactagaaataaaacagt
+17	34253800	34253801	+	rs3091332	SNV	A	A	NA	cctgactccctgaatgcactcaacaatgccAttactgaccacttactagaaataaaacagt
+17	34254232	34254233	+	rs2857655	SNV,SNV	T	A	NA	aaatactcctccactgcttactcatgtcccAtggaaattaagaaggaagccaggagaatag
+17	34254232	34254233	+	rs2857655	SNV,SNV	T	C	NA	aaatactcctccactgcttactcatgtcccCtggaaattaagaaggaagccaggagaatag
+17	34254232	34254233	+	rs2857655	SNV,SNV	T	T	NA	aaatactcctccactgcttactcatgtcccTtggaaattaagaaggaagccaggagaatag
+17	34254421	34254422	+	rs3760396	SNV	G	C	NA	gatgctgaggacagagagaggacccaagcaCgcaactagttggaggacttgtacacgtttc
+17	34254421	34254422	+	rs3760396	SNV	G	G	NA	gatgctgaggacagagagaggacccaagcaGgcaactagttggaggacttgtacacgtttc
+17	34254421	34254422	+	rs3760396	SNV	G	C	NA	gatgctgaggacagagagaggacccaagcaCgcaactagttggaggacttgtacacgtttc
+17	34254421	34254422	+	rs3760396	SNV	G	G	NA	gatgctgaggacagagagaggacccaagcaGgcaactagttggaggacttgtacacgtttc
+17	34254987	34254988	+	rs2857656	SNV,SNV	G	A	NA	cttccttccttttctgcagttttcgcttcaAagaaagcagaatccttaaaaataaccctct
+17	34254987	34254988	+	rs2857656	SNV,SNV	G	C	NA	cttccttccttttctgcagttttcgcttcaCagaaagcagaatccttaaaaataaccctct
+17	34254987	34254988	+	rs2857656	SNV,SNV	G	G	NA	cttccttccttttctgcagttttcgcttcaGagaaagcagaatccttaaaaataaccctct
+17	34255474	34255475	+	rs28730833	SNV,SNV	T	A	NA	tccttgaaccacattgtcttctctctgagtAatcatggaccatccaagcagacgtggtacc
+17	34255474	34255475	+	rs28730833	SNV,SNV	T	C	NA	tccttgaaccacattgtcttctctctgagtCatcatggaccatccaagcagacgtggtacc
+17	34255474	34255475	+	rs28730833	SNV,SNV	T	T	NA	tccttgaaccacattgtcttctctctgagtTatcatggaccatccaagcagacgtggtacc
+17	34256112	34256113	+	rs2857657	SNV	G	C	NA	gcagaagcactgggatttaatgagctctttCtcttctcctgcctgccttttgctttttcct
+17	34256112	34256113	+	rs2857657	SNV	G	G	NA	gcagaagcactgggatttaatgagctctttGtcttctcctgcctgccttttgctttttcct
+17	34256249	34256250	+	rs4586	SNV	T	C	NA	agatgcaatcaatgccccagtcacctgctgCtataacttcaccaataggaagatctcagtg
+17	34256249	34256250	+	rs4586	SNV	T	T	NA	agatgcaatcaatgccccagtcacctgctgTtataacttcaccaataggaagatctcagtg
+17	34256891	34256892	+	rs13900	SNV	C	T	NA	cttattttcccctagctttccccagacaccTtgttttattttattataatgaattttgttt
+17	34256891	34256892	+	rs13900	SNV	C	C	NA	cttattttcccctagctttccccagacaccCtgttttattttattataatgaattttgttt
+17	34256891	34256892	+	rs13900	SNV	C	T	NA	cttattttcccctagctttccccagacaccTtgttttattttattataatgaattttgttt
+17	34256891	34256892	+	rs13900	SNV	C	C	NA	cttattttcccctagctttccccagacaccCtgttttattttattataatgaattttgttt
+17	34257762	34257763	+	rs3917890	SNV	G	T	NA	taggaaaattataggatcattaagaaaggaTaaggaagagtgggagcaaatacctggaggt
+17	34257762	34257763	+	rs3917890	SNV	G	G	NA	taggaaaattataggatcattaagaaaggaGaaggaagagtgggagcaaatacctggaggt
+17	34257929	34257930	+	rs41343046	SNV	T	A	NA	gtcaagggatttgaatgttagggtgaaaagAtactactcaactctgtaggttaaaaggaaa
+17	34257929	34257930	+	rs41343046	SNV	T	T	NA	gtcaagggatttgaatgttagggtgaaaagTtactactcaactctgtaggttaaaaggaaa
+17	34258667	34258668	+	rs3917891	SNV	C	T	NA	caagacaggtcagatattctgagcctacatTgatcatacaggtatgataatgtgttacaaa
+17	34258667	34258668	+	rs3917891	SNV	C	C	NA	caagacaggtcagatattctgagcctacatCgatcatacaggtatgataatgtgttacaaa
+17	34258836	34258837	+	rs3917892	SNV	C	A	NA	cattcctgagccagtccagggtccctgaatAagactaccgaatcccttcaaagctccaagt
+17	34258836	34258837	+	rs3917892	SNV	C	C	NA	cattcctgagccagtccagggtccctgaatCagactaccgaatcccttcaaagctccaagt
+17	34258841	34258842	+	rs41416652	SNV	T	C	NA	ctgagccagtccagggtccctgaatcagacCaccgaatcccttcaaagctccaagtaccct
+17	34258841	34258842	+	rs41416652	SNV	T	T	NA	ctgagccagtccagggtccctgaatcagacTaccgaatcccttcaaagctccaagtaccct
+17	34258890	34258891	+	rs3917893	SNV	C	A	NA	tccaagtaccctgatatatcagtcagcagaAaatttattgacagctatttagaaaactcac
+17	34258890	34258891	+	rs3917893	SNV	C	C	NA	tccaagtaccctgatatatcagtcagcagaCaatttattgacagctatttagaaaactcac
+17	34258941	34258942	+	rs3917894	SNV	G	A	NA	gaaaactcactgaccctcactccaggtcaaAcagcgtcccctgcctctcctctacccctac
+17	34258941	34258942	+	rs3917894	SNV	G	G	NA	gaaaactcactgaccctcactccaggtcaaGcagcgtcccctgcctctcctctacccctac
+17	34259074	34259075	+	rs2530797	SNV	C	T	NA	tagaatgcaaacaaatgagacctcatcataTggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	C	NA	tagaatgcaaacaaatgagacctcatcataCggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	T	NA	tagaatgcaaacaaatgagacctcatcataTggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	C	NA	tagaatgcaaacaaatgagacctcatcataCggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	T	NA	tagaatgcaaacaaatgagacctcatcataTggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	C	NA	tagaatgcaaacaaatgagacctcatcataCggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	T	NA	tagaatgcaaacaaatgagacctcatcataTggcttccgagcagcaaccttttgacgccag
+17	34259074	34259075	+	rs2530797	SNV	C	C	NA	tagaatgcaaacaaatgagacctcatcataCggcttccgagcagcaaccttttgacgccag
+17	34259828	34259829	+	rs3917896	SNV	G	C	NA	tgccttcatcttaaaaggtgattatattgtCattatgctgagcccatttggataatccagg
+17	34259828	34259829	+	rs3917896	SNV	G	G	NA	tgccttcatcttaaaaggtgattatattgtGattatgctgagcccatttggataatccagg
+17	34260006	34260007	+	rs3917897	SNV	C	A	NA	tttttttttttttttggaaatggagtctcgAtctattgcccaggctggagtgcagtagcac
+17	34260006	34260007	+	rs3917897	SNV	C	C	NA	tttttttttttttttggaaatggagtctcgCtctattgcccaggctggagtgcagtagcac
+17	34260211	34260212	+	rs3917898	SNV	T	C	NA	ccaggctggtctcgaactcctgacctcaggCgatccacccgcctcagactcccagagtaca
+17	34260211	34260212	+	rs3917898	SNV	T	T	NA	ccaggctggtctcgaactcctgacctcaggTgatccacccgcctcagactcccagagtaca
+17	34260220	34260221	+	rs3917899	SNV,SNV	C	A	NA	tctcgaactcctgacctcaggtgatccaccAgcctcagactcccagagtacaggtgtgaga
+17	34260220	34260221	+	rs3917899	SNV,SNV	C	T	NA	tctcgaactcctgacctcaggtgatccaccTgcctcagactcccagagtacaggtgtgaga
+17	34260220	34260221	+	rs3917899	SNV,SNV	C	C	NA	tctcgaactcctgacctcaggtgatccaccCgcctcagactcccagagtacaggtgtgaga

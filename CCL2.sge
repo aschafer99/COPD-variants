@@ -1,0 +1,32 @@
+#!/bin/bash
+# Use current working directory
+#$ -cwd
+#
+# Join stdout and stderr
+#$ -j y
+#
+# Run job through bash shell
+#$ -S /bin/bash
+#
+#You can edit the scriptsince this line
+#
+# Your job name
+#$ -N Ale_schafer
+#
+# Send an email after the job has finished
+#$ -m e
+#$ -M ansjb1999@gmail.com
+#
+# If modules are needed, source modules environment (Do not delete the next line):
+. /etc/profile.d/modules.sh
+#
+# Add any modules you might require:
+#
+module load rsat
+
+### Commands
+rsat fetch-sequences -i Data/CCL2.bed -o Results/RSAT/CCL2_bg.fasta -v 1 -downstr_ext 100 -upstr_ext 100 -genome hg38
+rsat create-background-model -v 1 -i Results/RSAT/CCL2_bg.fasta -markov 2 -out_format transitions -o Results/RSAT/CCL2_bg_model.txt
+rsat convert-variations -v 1 -i Data/CCL2.vcf -from vcf -to varBed -o Results/RSAT/CCL2.varBed
+rsat retrieve-variation-seq -species Homo_sapiens -assembly GRCh38 -i  Results/RSAT/CCL2.varBed -format varBed -mml 30 -v 1 -o  Results/RSAT/CCL2.varSeq
+rsat variation-scan -i  Results/RSAT/CCL2.varSeq -m /cm/shared/apps/rsat/rsat/public_html/motif_databases/JASPAR/Jaspar_2020/nonredundant/JASPAR2020_CORE_vertebrates_non-redundant_pfms.tf -m_format transfac -bg Results/RSAT/CCL2_bg_model.txt -o  Results/RSAT/CCL2_varScan.tsv -v 1 -mml 30 -lth score 1 -lth w_diff 1 -lth pval_ratio 10 -uth pval 1e-3

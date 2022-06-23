@@ -1,0 +1,25 @@
+; fetch-sequences  -i Data/ENTPD1.bed -o Results/RSAT/ENTPD1_bg.fasta -v 1 -downstr_ext 100 -upstr_ext 100 -genome hg38
+; Program version       	1.34
+; Genome                	hg38
+; DAS server URL        	http://genome.cse.ucsc.edu/cgi-bin/das/hg38
+; Reference             	segment
+; Upstream extension    	100
+; Downstream extension  	100
+; Invalid rows in query file	1
+; Input files
+;	input        	Data/ENTPD1.bed
+; Output files
+;	log          	Results/RSAT/ENTPD1_bg_log.txt
+;	output       	Results/RSAT/ENTPD1_bg.fasta
+; Skipped	1	rows in query file
+;	line 1	chrom	chromStar	chromEnd	Invalid chromosome name
+; sequences           	183
+; length sum          	36783
+; Host name	compute-00-03
+; Job started	2022-06-02.141709
+; Job done	2022-06-02.141711
+; Seconds	0.26
+;	user	0.26
+;	system	0.08
+;	cuser	0
+;	csystem	0
